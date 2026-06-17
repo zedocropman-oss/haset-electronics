@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HASET ELECTRONICS — Admin Panel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f7f7f5; color: #1a1a1a; }
+
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar .logo { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+    .topbar .logo span { color: #1D9E75; }
+    .topbar .badge { font-size: 12px; font-weight: 600; background: #E1F5EE; color: #0F6E56; padding: 3px 10px; border-radius: 20px; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media (max-width: 600px) { .stats { grid-template-columns: 1fr 1fr; } }
+    .stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; }
+    .stat-card .label { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .stat-card .value { font-size: 26px; font-weight: 700; color: #1D9E75; }
+
+    .panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; }
+    .panel-header { padding: 14px 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between; }
+    .panel-header h2 { font-size: 15px; font-weight: 600; }
+    .refresh-btn { font-size: 13px; background: #f0faf5; border: 1px solid #c3e6d8; color: #0F6E56; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 600; }
+    .refresh-btn:hover { background: #ddf5eb; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { text-align: left; padding: 10px 16px; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+    tbody tr { border-bottom: 1px solid #f0f0f0; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fafafa; }
+    tbody td { padding: 10px 16px; vertical-align: top; }
+    .name-cell { font-weight: 600; }
+    .phone-cell a { color: #1D9E75; text-decoration: none; }
+    .services-cell { font-size: 12px; color: #555; max-width: 200px; }
+    .notes-cell { font-size: 12px; color: #777; max-width: 160px; }
+    .date-cell { font-size: 12px; color: #aaa; white-space: nowrap; }
+
+    .status-select { font-size: 12px; padding: 3px 8px; border: 1px solid #e0e0e0; border-radius: 6px; font-family: inherit; cursor: pointer; background: #fff; }
+    .status-new       { border-color: #1D9E75; color: #0F6E56; background: #E1F5EE; }
+    .status-contacted { border-color: #f0b429; color: #8a6000; background: #fffbe6; }
+    .status-done      { border-color: #ccc;    color: #888;    background: #f5f5f5; }
+
+    .empty { text-align: center; padding: 40px 20px; color: #aaa; font-size: 14px; }
+
+    .login-overlay { position: fixed; inset: 0; background: #f7f7f5; display: flex; align-items: center; justify-content: center; z-index: 999; }
+    .login-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 14px; padding: 36px 32px; width: 320px; text-align: center; }
+    .login-box h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .login-box p { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .login-box input { width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; margin-bottom: 12px; outline: none; }
+    .login-box input:focus { border-color: #1D9E75; }
+    .login-box button { width: 100%; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .login-box button:hover { background: #0F6E56; }
+    .login-error { font-size: 13px; color: #a32d2d; margin-top: 8px; display: none; }
+  </style>
+</head>
+<body>
+
+<!-- Login gate -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>HASET <span style="color:#1D9E75">Admin</span></h2>
+    <p>Enter your admin password to continue</p>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button onclick="doLogin()">Sign in</button>
+    <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="logo">HASET <span>ELECTRONICS</span> — Admin</div>
+  <span class="badge" id="totalBadge">Loading…</span>
+</div>
+
+<div class="container">
+  <div class="stats">
+    <div class="stat-card"><div class="label">Total registrations</div><div class="value" id="sTotal">—</div></div>
+    <div class="stat-card"><div class="label">New</div><div class="value" id="sNew" style="color:#1D9E75">—</div></div>
+    <div class="stat-card"><div class="label">Contacted</div><div class="value" id="sContacted" style="color:#f0b429">—</div></div>
+    <div class="stat-card"><div class="label">Done</div><div class="value" id="sDone" style="color:#aaa">—</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Customer Registrations</h2>
+      <button class="refresh-btn" onclick="loadRegistrations()">↻ Refresh</button>
+    </div>
+    <div id="tableWrap">
+      <div class="empty">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let authToken = sessionStorage.getItem('haset_admin_token') || '';
+
+  // ── Login ─────────────────────────────────────────────────
+  if (authToken) document.getElementById('loginOverlay').style.display = 'none';
+
+  function doLogin() {
+    const pw = document.getElementById('pwInput').value;
+    fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        authToken = data.token;
+        sessionStorage.setItem('haset_admin_token', authToken);
+        document.getElementById('loginOverlay').style.display = 'none';
+        loadRegistrations();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    })
+    .catch(() => { document.getElementById('loginError').style.display = 'block'; });
+  }
+
+  // ── Load registrations ────────────────────────────────────
+  function loadRegistrations() {
+    fetch('/api/register', { headers: { 'Authorization': 'Bearer ' + authToken } })
+    .then(r => { if (r.status === 401) { sessionStorage.removeItem('haset_admin_token'); location.reload(); } return r.json(); })
+    .then(data => {
+      if (!data.success) return;
+      const rows = data.data;
+      updateStats(rows);
+      document.getElementById('totalBadge').textContent = rows.length + ' registrations';
+      renderTable(rows);
+    })
+    .catch(err => console.error(err));
+  }
+
+  function updateStats(rows) {
+    document.getElementById('sTotal').textContent     = rows.length;
+    document.getElementById('sNew').textContent       = rows.filter(r => r.status === 'new').length;
+    document.getElementById('sContacted').textContent = rows.filter(r => r.status === 'contacted').length;
+    document.getElementById('sDone').textContent      = rows.filter(r => r.status === 'done').length;
+  }
+
+  function renderTable(rows) {
+    const wrap = document.getElementById('tableWrap');
+    if (!rows.length) {
+      wrap.innerHTML = '<div class="empty">No registrations yet.</div>';
+      return;
+    }
+    wrap.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>City</th>
+            <th>Services</th><th>Notes</th><th>Date</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${r.id}</td>
+              <td class="name-cell">${esc(r.name)}</td>
+              <td class="phone-cell"><a href="tel:${esc(r.phone)}">${esc(r.phone)}</a></td>
+              <td>${r.email ? `<a href="mailto:${esc(r.email)}" style="color:#1D9E75;text-decoration:none">${esc(r.email)}</a>` : '—'}</td>
+              <td>${esc(r.city) || '—'}</td>
+              <td class="services-cell">${esc(r.services)}</td>
+              <td class="notes-cell">${esc(r.notes) || '—'}</td>
+              <td class="date-cell">${esc(r.created_at)}</td>
+              <td>
+                <select class="status-select status-${r.status}" onchange="updateStatus(${r.id}, this)">
+                  <option value="new"       ${r.status==='new'       ? 'selected':''}>New</option>
+                  <option value="contacted" ${r.status==='contacted' ? 'selected':''}>Contacted</option>
+                  <option value="done"      ${r.status==='done'      ? 'selected':''}>Done</option>
+                </select>
+              </td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function updateStatus(id, sel) {
+    const status = sel.value;
+    sel.className = 'status-select status-' + status;
+    fetch(`/api/register/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ status })
+    }).then(() => loadRegistrations()).catch(console.error);
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  if (authToken) loadRegistrations();
+</script>
+</body>
+</html>

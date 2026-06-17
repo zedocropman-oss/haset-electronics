@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HASET ELECTRONICS – Tunto Hadero, Central Ethiopia</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <!-- EmailJS removed — now using the backend API -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a1a; background: #fff; line-height: 1.7; }
+    .site { max-width: 760px; margin: 0 auto; padding: 0 1.25rem; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 0; border-bottom: 0.5px solid #e0e0e0; position: relative; }
+    .logo { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: #1a1a1a; }
+    .logo span { color: #1D9E75; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { font-size: 14px; color: #666; text-decoration: none; }
+    .nav-links a:hover { color: #1a1a1a; }
+
+    .dropdown-wrap { position: relative; }
+    .dropdown-btn { font-size: 14px; color: #666; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; font-family: inherit; }
+    .dropdown-btn:hover { color: #1a1a1a; }
+    .dropdown-btn i.arrow { font-size: 14px; transition: transform 0.2s; }
+    .dropdown-btn.open i.arrow { transform: rotate(180deg); }
+    .dropdown-menu { display: none; position: absolute; top: calc(100% + 10px); right: 0; background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; min-width: 240px; z-index: 100; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; font-size: 14px; color: #1a1a1a; border-bottom: 0.5px solid #e0e0e0; }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background: #f7f7f5; }
+    .dropdown-item i { font-size: 18px; color: #1D9E75; flex-shrink: 0; }
+
+    .hero { padding: 3.5rem 0 2.5rem; border-bottom: 0.5px solid #e0e0e0; }
+    .hero-tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #0F6E56; background: #E1F5EE; padding: 4px 10px; border-radius: 4px; margin-bottom: 1rem; }
+    .hero h1 { font-size: 32px; font-weight: 600; line-height: 1.25; margin-bottom: 0.75rem; letter-spacing: -0.5px; }
+    .hero p { font-size: 16px; color: #555; line-height: 1.7; max-width: 480px; }
+
+    .section { padding: 2.5rem 0; border-bottom: 0.5px solid #e0e0e0; }
+    .section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 1.5rem; }
+
+    .services-list { border: 0.5px solid #e0e0e0; border-radius: 12px; overflow: hidden; }
+    .service-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 0.5px solid #e0e0e0; }
+    .service-row:last-child { border-bottom: none; }
+    .service-row i { font-size: 20px; color: #1D9E75; flex-shrink: 0; }
+    .service-row .name { font-size: 14px; font-weight: 600; }
+    .service-row .desc { font-size: 13px; color: #666; margin-top: 2px; }
+
+    .form-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 13px; font-weight: 600; color: #666; }
+    .form-group input, .form-group textarea { font-size: 14px; padding: 9px 12px; border: 0.5px solid #e0e0e0; border-radius: 8px; background: #f7f7f5; color: #1a1a1a; font-family: inherit; outline: none; transition: border-color 0.15s; }
+    .form-group input:focus, .form-group textarea:focus { border-color: #1D9E75; background: #fff; }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .checkboxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+    .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #1D9E75; cursor: pointer; }
+
+    .submit-btn { margin-top: 1rem; width: 100%; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+    .submit-btn:hover { background: #0F6E56; }
+    .submit-btn:disabled { background: #aaa; cursor: default; }
+
+    .success-msg { display: none; margin-top: 1rem; padding: 12px 16px; background: #E1F5EE; border-radius: 8px; font-size: 14px; color: #0F6E56; text-align: center; }
+    .error-msg { display: none; margin-top: 1rem; padding: 12px 16px; background: #fdecea; border-radius: 8px; font-size: 14px; color: #a32d2d; text-align: center; }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-item { display: flex; align-items: flex-start; gap: 12px; background: #f7f7f5; border-radius: 8px; padding: 1rem; }
+    .contact-item i { font-size: 20px; color: #1D9E75; margin-top: 2px; flex-shrink: 0; }
+    .contact-item .label { font-size: 12px; color: #888; margin-bottom: 2px; }
+    .contact-item .value { font-size: 14px; font-weight: 600; line-height: 1.6; color: #1a1a1a; }
+
+    .hours-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 8px 0; border-bottom: 0.5px solid #e0e0e0; }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-row .day { color: #666; }
+    .open-badge { font-size: 11px; font-weight: 600; background: #E1F5EE; color: #0F6E56; padding: 2px 8px; border-radius: 4px; }
+
+    footer { padding: 1.5rem 0; text-align: center; font-size: 13px; color: #999; }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <nav>
+      <div class="logo">HASET <span>ELECTRONICS</span></div>
+      <div class="nav-links">
+        <div class="dropdown-wrap">
+          <button class="dropdown-btn" id="svcBtn" onclick="toggleDropdown()">
+            Services <i class="ti ti-chevron-down arrow"></i>
+          </button>
+          <div class="dropdown-menu" id="svcMenu">
+            <div class="dropdown-item"><i class="ti ti-copy"></i> Photocopying</div>
+            <div class="dropdown-item"><i class="ti ti-printer"></i> Printing</div>
+            <div class="dropdown-item"><i class="ti ti-file-text"></i> Fax</div>
+            <div class="dropdown-item"><i class="ti ti-id-badge"></i> Passport applications</div>
+            <div class="dropdown-item"><i class="ti ti-photo"></i> Fast photo printing</div>
+            <div class="dropdown-item"><i class="ti ti-device-desktop"></i> Computer training</div>
+          </div>
+        </div>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-tag">Tunto Hadero · Central Ethiopia · Open 7 days</div>
+      <h1>Print, copy & digital<br>services — fast.</h1>
+      <p>Your one-stop shop for document printing, photocopying, fax, passport applications, photo printing, and computer training in Tunto Hadero.</p>
+    </div>
+
+    <div class="section" id="services">
+      <div class="section-label">Our services</div>
+      <div class="services-list">
+        <div class="service-row"><i class="ti ti-copy"></i><div><div class="name">Photocopying</div><div class="desc">Black & white and color copies, any document size</div></div></div>
+        <div class="service-row"><i class="ti ti-printer"></i><div><div class="name">Printing</div><div class="desc">Documents, forms, certificates, and ID photos</div></div></div>
+        <div class="service-row"><i class="ti ti-file-text"></i><div><div class="name">Fax</div><div class="desc">Send and receive faxes locally and internationally</div></div></div>
+        <div class="service-row"><i class="ti ti-id-badge"></i><div><div class="name">Passport applications</div><div class="desc">Online application assistance and form submission</div></div></div>
+        <div class="service-row"><i class="ti ti-photo"></i><div><div class="name">Fast photo printing</div><div class="desc">High-quality passport and personal photos printed in minutes</div></div></div>
+        <div class="service-row"><i class="ti ti-device-desktop"></i><div><div class="name">Computer training</div><div class="desc">Beginner to advanced courses for individuals and groups</div></div></div>
+      </div>
+    </div>
+
+    <div class="section" id="register">
+      <div class="section-label">Customer registration</div>
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" id="fname" placeholder="Your full name" />
+          </div>
+          <div class="form-group">
+            <label>Phone number</label>
+            <input type="tel" id="fphone" placeholder="09xxxxxxxx" />
+          </div>
+          <div class="form-group">
+            <label>Email address (optional)</label>
+            <input type="email" id="femail" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>City / Kebele</label>
+            <input type="text" id="fcity" placeholder="Your location" />
+          </div>
+          <div class="form-group full">
+            <label>Select service(s) needed</label>
+            <div class="checkboxes">
+              <label class="checkbox-item"><input type="checkbox" value="Photocopying" /> Photocopying</label>
+              <label class="checkbox-item"><input type="checkbox" value="Printing" /> Printing</label>
+              <label class="checkbox-item"><input type="checkbox" value="Fax" /> Fax</label>
+              <label class="checkbox-item"><input type="checkbox" value="Passport applications" /> Passport applications</label>
+              <label class="checkbox-item"><input type="checkbox" value="Fast photo printing" /> Fast photo printing</label>
+              <label class="checkbox-item"><input type="checkbox" value="Computer training" /> Computer training</label>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label>Additional notes (optional)</label>
+            <textarea id="fnotes" placeholder="Any details about your request..."></textarea>
+          </div>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit registration</button>
+        <div class="success-msg" id="successMsg">
+          <i class="ti ti-circle-check"></i> Thank you! Your registration has been received. We will contact you shortly.
+        </div>
+        <div class="error-msg" id="errorMsg">
+          <i class="ti ti-alert-circle"></i> Something went wrong. Please try again or call us directly.
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="contact">
+      <div class="section-label">Find us</div>
+      <div class="contact-grid">
+        <div class="contact-item"><i class="ti ti-map-pin"></i><div><div class="label">Address</div><div class="value">Tunto Hadero<br>Central Ethiopia</div></div></div>
+        <div class="contact-item"><i class="ti ti-phone"></i><div><div class="label">Phone</div><div class="value">0919 337 228<br>0921 913 067</div></div></div>
+        <div class="contact-item"><i class="ti ti-mail"></i><div><div class="label">Email</div><div class="value">zedocropman@gmail.com</div></div></div>
+        <div class="contact-item"><i class="ti ti-clock"></i><div><div class="label">Hours</div><div class="value">Open every day<br>Sunday to Sunday</div></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Working hours</div>
+      <div class="hours-row">
+        <span class="day">Sunday – Saturday</span>
+        <span>8:00 AM – 6:00 PM</span>
+        <span class="open-badge">Open daily</span>
+      </div>
+    </div>
+
+    <footer>© 2026 HASET ELECTRONICS · Tunto Hadero, Central Ethiopia</footer>
+  </div>
+
+  <script>
+    // ── Dropdown ──────────────────────────────────────────────
+    function toggleDropdown() {
+      document.getElementById('svcBtn').classList.toggle('open');
+      document.getElementById('svcMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.dropdown-wrap')) {
+        document.getElementById('svcBtn').classList.remove('open');
+        document.getElementById('svcMenu').classList.remove('open');
+      }
+    });
+
+    // ── Form submission → backend API ─────────────────────────
+    async function submitForm() {
+      const name    = document.getElementById('fname').value.trim();
+      const phone   = document.getElementById('fphone').value.trim();
+      const email   = document.getElementById('femail').value.trim();
+      const city    = document.getElementById('fcity').value.trim();
+      const notes   = document.getElementById('fnotes').value.trim();
+      const services = [...document.querySelectorAll('.checkbox-item input:checked')].map(c => c.value);
+
+      if (!name)           { alert('Please enter your full name.'); return; }
+      if (!phone)          { alert('Please enter your phone number.'); return; }
+      if (!services.length){ alert('Please select at least one service.'); return; }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled    = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        const res  = await fetch('/api/register', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ name, phone, email, city, services, notes }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('successMsg').style.display = 'block';
+          document.getElementById('errorMsg').style.display   = 'none';
+          btn.textContent = 'Submitted ✓';
+          // clear form
+          ['fname','fphone','femail','fcity','fnotes'].forEach(id =>
+            document.getElementById(id).value = '');
+          document.querySelectorAll('.checkbox-item input').forEach(cb => cb.checked = false);
+        } else {
+          document.getElementById('errorMsg').style.display   = 'block';
+          document.getElementById('successMsg').style.display = 'none';
+          const errEl = document.getElementById('errorMsg');
+          errEl.innerHTML = '⚠ ' + (data.errors ? data.errors.join(' ') : 'Something went wrong.');
+          btn.disabled    = false;
+          btn.textContent = 'Submit registration';
+        }
+      } catch (err) {
+        document.getElementById('errorMsg').style.display   = 'block';
+        document.getElementById('successMsg').style.display = 'none';
+        btn.disabled    = false;
+        btn.textContent = 'Submit registration';
+      }
+    }
+  </script>
+</body>
+</html>
